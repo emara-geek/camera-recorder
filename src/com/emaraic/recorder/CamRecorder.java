@@ -54,10 +54,9 @@ public class CamRecorder extends JFrame {
 
         setTitle("Camera Recorder");
         setSize(1000, 1100);
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         control = new JButton("Start");
-        text1 = new JLabel("");
+        text1 = new JLabel("  ");
         text2 = new JLabel(" Developer: Taha Emara");
         canvas = new JPanel();
         Table table = new Table();
@@ -67,11 +66,13 @@ public class CamRecorder extends JFrame {
         table.addCell(canvas).width(CAPTUREWIDTH).height(CAPTUREHRIGHT).colspan(2);
         table.row();
         table.addCell(control).right();
-        table.addCell(text1).left();
+        table.addCell(text1).center();
         table.row();
-        table.addCell(control).right();
+        table.addCell(text2).padLeft(100);
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
+        setResizable(false);
         control.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -97,6 +98,7 @@ public class CamRecorder extends JFrame {
             grabber.stop();
             runnable = false;
             control.setText("Start");
+            
             text1.setText("");
         } else {
             control.setText("Stop");
@@ -112,7 +114,7 @@ public class CamRecorder extends JFrame {
         @Override
         public void run() {
             synchronized (this) {
-                while (runnable) {
+               // while (runnable) {
                     try {
                         control.setText("Stop");
                         grabber.setImageWidth(CAPTUREWIDTH);
@@ -143,7 +145,7 @@ public class CamRecorder extends JFrame {
 
                         Frame capturedFrame = null;
                         Java2DFrameConverter paintConverter = new Java2DFrameConverter();
-                        while ((capturedFrame = grabber.grab()) != null) {
+                        while ((capturedFrame = grabber.grab()) != null&&runnable) {
                             BufferedImage buff = paintConverter.getBufferedImage(capturedFrame, 1);
                             Graphics g = canvas.getGraphics();
                             g.drawImage(buff, 0, 0, CAPTUREWIDTH, CAPTUREHRIGHT, 0, 0, buff.getWidth(), buff.getHeight(), null);
@@ -155,7 +157,7 @@ public class CamRecorder extends JFrame {
                         Logger.getLogger(CamRecorder.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
-                }//end of while
+                //}//end of while
             }
         }
     }
