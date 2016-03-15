@@ -28,6 +28,7 @@ import org.bytedeco.javacv.OpenCVFrameGrabber;
  *
  * @author: Taha Emara 
  * Website: http://www.emaraic.com
+ * E-mail: taha@emaraic.com
  */
 public class CamRecorder extends JFrame {
 
@@ -64,12 +65,13 @@ public class CamRecorder extends JFrame {
         table.pad(40);
         getContentPane().add(table);
         canvas.setBorder(BorderFactory.createEtchedBorder());
-        table.addCell(canvas).width(CAPTUREWIDTH).height(CAPTUREHRIGHT).colspan(2);
+        table.addCell(canvas).width(CAPTUREWIDTH).height(CAPTUREHRIGHT);
         table.row();
-        table.addCell(control).right();
-        table.addCell(text1).center();
+        table.addCell(control);
         table.row();
-        table.addCell(text2).padLeft(100);
+        table.addCell(text1);
+        table.row();
+        table.addCell(text2);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -106,7 +108,7 @@ public class CamRecorder extends JFrame {
             catcher = new Thread(cat);
             catcher.start();
             runnable = true;
-            text1.setText("Recording ...");
+            text1.setText("<html><font color='red'>Recording ...</font></html>");
         }
     }
 
