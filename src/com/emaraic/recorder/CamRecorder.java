@@ -26,7 +26,8 @@ import org.bytedeco.javacv.OpenCVFrameGrabber;
 
 /**
  *
- * @author Taha Emara Website http://www.emaraic.com
+ * @author: Taha Emara 
+ * Website: http://www.emaraic.com
  */
 public class CamRecorder extends JFrame {
 
