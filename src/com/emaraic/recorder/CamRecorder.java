@@ -1,4 +1,4 @@
-package com.emaraic;
+package com.emaraic.recorder;
 
 import com.esotericsoftware.tablelayout.swing.Table;
 import java.awt.Color;
