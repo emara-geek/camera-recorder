@@ -24,6 +24,8 @@ import org.bytedeco.javacv.Java2DFrameConverter;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
 
+import static java.lang.Thread.sleep;
+
 /**
  *
  * @author: Taha Emara 
@@ -148,13 +150,28 @@ public class CamRecorder extends JFrame {
 
                         Frame capturedFrame = null;
                         Java2DFrameConverter paintConverter = new Java2DFrameConverter();
+                        long startTime = System.currentTimeMillis();
+                        long frame = 0;
                         while ((capturedFrame = grabber.grab()) != null&&runnable) {
                             BufferedImage buff = paintConverter.getBufferedImage(capturedFrame, 1);
                             Graphics g = canvas.getGraphics();
                             g.drawImage(buff, 0, 0, CAPTUREWIDTH, CAPTUREHRIGHT, 0, 0, buff.getWidth(), buff.getHeight(), null);
                             recorder.record(capturedFrame);
+                            frame++;
+                            long waitMillis = 1000 * frame / FRAME_RATE - (System.currentTimeMillis() - startTime);
+                            while (waitMillis <= 0) {
+                                // If this error appeared, better to consider lower FRAME_RATE.
+                                System.out.println("[ERROR] grab image operation is too slow to encode, skip grab image at frame = " + frame + ", waitMillis = " + waitMillis);
+                                recorder.record(capturedFrame);  // use same capturedFrame for fast processing.
+                                frame++;
+                                waitMillis = 1000 * frame / FRAME_RATE - (System.currentTimeMillis() - startTime);
+                            }
+                            //System.out.println("frame " + frame + ", System.currentTimeMillis() = " + System.currentTimeMillis() + ", waitMillis = " + waitMillis);
+                            Thread.sleep(waitMillis);
                         }
                     } catch (FrameGrabber.Exception ex) {
+                        Logger.getLogger(CamRecorder.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InterruptedException ex) {
                         Logger.getLogger(CamRecorder.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (Exception ex) {
                         Logger.getLogger(CamRecorder.class.getName()).log(Level.SEVERE, null, ex);
